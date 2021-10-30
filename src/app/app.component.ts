@@ -42,7 +42,7 @@ export class AppComponent {
   }
 
   startInterval() {
-    this.sessionid = this.randomString();
+    // this.sessionid = this.randomString();
     console.log(this.sessionid);
     this.intervalOn = true;
     console.log("activating automated capturing...");
