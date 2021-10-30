@@ -92,6 +92,7 @@ var AppComponent = (function () {
         });
     };
     AppComponent.prototype.stopInterval = function () {
+        this.intervalOn = false;
         console.log("stopping automated capturing...");
         this.timedSub.unsubscribe();
     };
