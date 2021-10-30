@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build:prod": "ng build --configuration production"
+    "build:prod": "ng build --configuration production --base-href https://hackathon-wbs-2021.github.io/ICU.Web2/"
   },
   "private": true,
   "dependencies": {
