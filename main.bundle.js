@@ -38,7 +38,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div style=\"text-align: center\">\n    <h1>\n      <span class=\"label label-success\">Working with Camera using Angular</span>\n    </h1>\n  </div>\n\n  <div class=\"row\" style=\"text-align: right\">\n    <h3>\n      <span class=\"label label-warning\">Balram Chavan </span>\n    </h3>\n    <div class=\"row\">\n      <div class=\"col-md-1 pull-right\">\n        <h4>\n          <a\n            href=\"https://www.linkedin.com/in/balram-chavan-957511116/\"\n            target=\"_blank\"\n            >LinkedIn</a\n          >\n        </h4>\n      </div>\n      <div class=\"col-md-1 pull-right\">\n        <h4>\n          <a href=\"https://github.com/ultrasonicsoft\" target=\"_blank\">GitHub</a>\n        </h4>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"row\">\n    <button (click)=\"start()\" class=\"btn btn-primary\">Play</button>\n    <button (click)=\"toggleControls()\" class=\"btn btn-success\">\n      Toggle Controls\n    </button>\n    <button (click)=\"pause()\" class=\"btn btn-warning\">Pause</button>\n    <button (click)=\"resume()\" class=\"btn btn-info\">Resume</button>\n    <button (click)=\"sound()\" class=\"btn btn-danger\">Play with Sound</button>\n    <button (click)=\"blob()\" class=\"btn btn-danger\">Create a blob</button>\n  </div>\n\n  <div class=\"row\">\n    <div class=\"col-md-12\">\n      <div class=\"text-center\">\n        <h3>\n          <video #videoElement></video>\n        </h3>\n      </div>\n    </div>\n  </div>\n</div>\n\n<img [src]=\"image\" />\n"
+module.exports = "<div class=\"container\">\n  <div style=\"text-align: center\">\n    <h1>\n      <span class=\"label label-success\">ICU </span>\n    </h1>\n  </div>\n\n  <div class=\"row\">\n    <div class=\"col-md-12\">\n      <div class=\"text-center\">\n        <button (click)=\"start()\" class=\"btn btn-primary\">Play</button>\n        <button (click)=\"toggleControls()\" class=\"btn btn-success\">\n          Toggle Controls\n        </button>\n        <button (click)=\"pause()\" class=\"btn btn-warning\">Pause</button>\n        <button (click)=\"resume()\" class=\"btn btn-info\">Resume</button>\n        <button (click)=\"sound()\" class=\"btn btn-danger\">\n          Play with Sound\n        </button>\n        <button (click)=\"blob()\" class=\"btn btn-danger\">Create a blob</button>\n        <button\n          (click)=\"startInterval()\"\n          [disabled]=\"intervalOn\"\n          class=\"btn btn-success\"\n        >\n          Start timer\n        </button>\n        <button\n          (click)=\"stopInterval()\"\n          [disabled]=\"!intervalOn\"\n          class=\"btn btn-danger\"\n        >\n          Stop timer\n        </button>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"row\">\n    <div class=\"col-md-12\">\n      <div class=\"text-center\">\n        <h3>\n          <video #videoElement></video>\n        </h3>\n      </div>\n    </div>\n  </div>\n</div>\n\n<img [src]=\"image\" />\n"
 
 /***/ }),
 
@@ -49,6 +49,8 @@ module.exports = "<div class=\"container\">\n  <div style=\"text-align: center\"
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_common_http__ = __webpack_require__("../../../common/esm5/http.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_core__ = __webpack_require__("../../../core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -60,11 +62,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var AppComponent = (function () {
     function AppComponent(httpClient) {
         this.httpClient = httpClient;
         this.isPlaying = false;
         this.displayControls = true;
+        this.intervalOn = false;
         this.endpoint = "https://icufunctions.azurewebsites.net/api/analyse/image";
         this.ocrResult = "";
     }
@@ -78,6 +82,18 @@ var AppComponent = (function () {
     AppComponent.prototype.pause = function () {
         this.video.pause();
     };
+    AppComponent.prototype.startInterval = function () {
+        var _this = this;
+        this.intervalOn = true;
+        console.log("activating automated capturing...");
+        this.timedSub = __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].interval(2000).subscribe(function (val) {
+            _this.blob();
+        });
+    };
+    AppComponent.prototype.stopInterval = function () {
+        console.log("stopping automated capturing...");
+        this.timedSub.unsubscribe();
+    };
     AppComponent.prototype.toggleControls = function () {
         this.video.controls = this.displayControls;
         this.displayControls = !this.displayControls;
@@ -86,6 +102,7 @@ var AppComponent = (function () {
         this.video.play();
     };
     AppComponent.prototype.blob = function () {
+        console.log("snap");
         var canvas = document.createElement("canvas"); // create a canvas
         var ctx = canvas.getContext("2d"); // get its context
         canvas.width = this.video.videoWidth; // set its size to the one of the video
@@ -98,7 +115,6 @@ var AppComponent = (function () {
         // ctx.stroke();
         var data = canvas.toDataURL("image/jpeg");
         this.image = data;
-        console.log(data);
         this.uploadImage(data);
     };
     AppComponent.prototype.sound = function () {
@@ -123,7 +139,6 @@ var AppComponent = (function () {
         var result = this.httpClient
             .post(this.endpoint, cleanedBlob)
             .subscribe(function (x) { return (_this.ocrResult = x); });
-        console.log(result);
     };
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["_1" /* ViewChild */])("videoElement"),
