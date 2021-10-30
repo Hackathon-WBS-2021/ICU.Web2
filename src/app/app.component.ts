@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Component, ViewChild } from "@angular/core";
+import { Observable } from "rxjs";
 
 @Component({
   selector: "app-root",
@@ -12,9 +13,11 @@ export class AppComponent {
   image: string;
   isPlaying = false;
   displayControls = true;
+  intervalOn = false;
 
   endpoint = "https://icufunctions.azurewebsites.net/api/analyse/image";
   ocrResult = "";
+  timedSub: any;
 
   constructor(private httpClient: HttpClient) {}
 
@@ -31,6 +34,19 @@ export class AppComponent {
     this.video.pause();
   }
 
+  startInterval() {
+    this.intervalOn = true;
+    console.log("activating automated capturing...");
+    this.timedSub = Observable.interval(2000).subscribe((val) => {
+      this.blob();
+    });
+  }
+
+  stopInterval() {
+    console.log("stopping automated capturing...");
+    this.timedSub.unsubscribe();
+  }
+
   toggleControls() {
     this.video.controls = this.displayControls;
     this.displayControls = !this.displayControls;
@@ -41,6 +57,7 @@ export class AppComponent {
   }
 
   blob() {
+    console.log("snap");
     const canvas = document.createElement("canvas"); // create a canvas
     const ctx = canvas.getContext("2d"); // get its context
     canvas.width = this.video.videoWidth; // set its size to the one of the video
@@ -55,7 +72,6 @@ export class AppComponent {
 
     var data = canvas.toDataURL("image/jpeg");
     this.image = data;
-    console.log(data);
     this.uploadImage(data);
   }
 
@@ -83,6 +99,5 @@ export class AppComponent {
     const result = this.httpClient
       .post<any>(this.endpoint, cleanedBlob)
       .subscribe((x) => (this.ocrResult = x));
-    console.log(result);
   }
 }
