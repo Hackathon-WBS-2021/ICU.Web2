@@ -1,3 +1,4 @@
+import { HttpClient } from "@angular/common/http";
 import { Component, ViewChild } from "@angular/core";
 
 @Component({
@@ -9,13 +10,17 @@ export class AppComponent {
   @ViewChild("videoElement") videoElement: any;
   video: any;
   image: string;
-
   isPlaying = false;
-
   displayControls = true;
+
+  endpoint = "https://icufunctions.azurewebsites.net/api/analyse/image";
+  ocrResult = "";
+
+  constructor(private httpClient: HttpClient) {}
 
   ngOnInit() {
     this.video = this.videoElement.nativeElement;
+    this.start();
   }
 
   start() {
@@ -42,17 +47,16 @@ export class AppComponent {
     canvas.height = this.video.videoHeight;
     ctx.drawImage(this.video, 0, 0); // the video
 
-    ctx.beginPath();
-    ctx.lineWidth = 10;
-    ctx.strokeStyle = "blue";
-    ctx.rect(282, 341, 139, 139);
-    ctx.stroke();
+    // ctx.beginPath();
+    // ctx.lineWidth = 10;
+    // ctx.strokeStyle = "blue";
+    // ctx.rect(282, 341, 139, 139);
+    // ctx.stroke();
 
     var data = canvas.toDataURL("image/jpeg");
     this.image = data;
     console.log(data);
-
-    console.log(ctx);
+    this.uploadImage(data);
   }
 
   sound() {
@@ -72,5 +76,13 @@ export class AppComponent {
       this.video.srcObject = stream;
       this.video.play();
     });
+  }
+
+  private uploadImage(blob: string): void {
+    const cleanedBlob = blob.replace("data:image/jpeg;base64,", "");
+    const result = this.httpClient
+      .post<any>(this.endpoint, cleanedBlob)
+      .subscribe((x) => (this.ocrResult = x));
+    console.log(result);
   }
 }
