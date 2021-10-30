@@ -46,6 +46,7 @@ export class AppComponent {
   }
 
   stopInterval() {
+    this.intervalOn = false;
     console.log("stopping automated capturing...");
     this.timedSub.unsubscribe();
   }
