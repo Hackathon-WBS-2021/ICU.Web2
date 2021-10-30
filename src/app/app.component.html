@@ -8,7 +8,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="text-center">
-        <button (click)="start()" class="btn btn-primary">Play</button>
+        <!-- <button (click)="start()" class="btn btn-primary">Play</button>
         <button (click)="toggleControls()" class="btn btn-success">
           Toggle Controls
         </button>
@@ -16,8 +16,8 @@
         <button (click)="resume()" class="btn btn-info">Resume</button>
         <button (click)="sound()" class="btn btn-danger">
           Play with Sound
-        </button>
-        <button (click)="blob()" class="btn btn-danger">Create a blob</button>
+        </button> -->
+        <button (click)="blob()" class="btn btn-info">Take a photo</button>
         <button
           (click)="startInterval()"
           [disabled]="intervalOn"
@@ -45,6 +45,136 @@
       </div>
     </div>
   </div>
-</div>
 
-<img [src]="image" />
+  <div class="row">
+    <div class="col-md-8">
+      <img [src]="image" />
+    </div>
+    <div class="col-md-4">
+      <div class="well" *ngIf="faceOcrResult">
+        <table class="table">
+          <thead></thead>
+          <tbody>
+            <tr>
+              <th scope="row">age</th>
+              <td>{{ faceOcrResult.faceAttributes.age }}</td>
+            </tr>
+            <tr>
+              <th scope="row">gender</th>
+              <td>{{ faceOcrResult.faceAttributes.gender }}</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Larry</td>
+            </tr>
+
+            <tr>
+              <th scope="row">neutral</th>
+              <td>
+                <div class="progress">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    attr.aria-valuenow="{{
+                      faceOcrResult.faceAttributes.emotion.neutral
+                    }}"
+                    attr.aria-valuemin="0"
+                    attr.aria-valuemax="1"
+                    [style.width]="
+                      faceOcrResult.faceAttributes.emotion.neutral /
+                        current_max_data | percent: '1.0-1'
+                    "
+                  ></div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th scope="row">happy</th>
+              <td>
+                <div class="progress">
+                  <div
+                    class="progress-bar bg-success"
+                    role="progressbar"
+                    attr.aria-valuenow="{{
+                      faceOcrResult.faceAttributes.emotion.happiness
+                    }}"
+                    attr.aria-valuemin="0"
+                    attr.aria-valuemax="1"
+                    [style.width]="
+                      faceOcrResult.faceAttributes.emotion.happiness /
+                        current_max_data | percent: '1.0-1'
+                    "
+                  ></div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th scope="row">sad</th>
+              <td>
+                <div class="progress">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    attr.aria-valuenow="{{
+                      faceOcrResult.faceAttributes.emotion.sadness
+                    }}"
+                    attr.aria-valuemin="0"
+                    attr.aria-valuemax="1"
+                    [style.width]="
+                      faceOcrResult.faceAttributes.emotion.sadness /
+                        current_max_data | percent: '1.0-1'
+                    "
+                  ></div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th scope="row">angry</th>
+              <td>
+                <div class="progress">
+                  <div
+                    class="progress-bar bg-danger"
+                    role="progressbar"
+                    attr.aria-valuenow="{{
+                      faceOcrResult.faceAttributes.emotion.anger
+                    }}"
+                    attr.aria-valuemin="0"
+                    attr.aria-valuemax="1"
+                    [style.width]="
+                      faceOcrResult.faceAttributes.emotion.anger /
+                        current_max_data | percent: '1.0-1'
+                    "
+                  ></div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <th scope="row">surprised</th>
+              <td>
+                <div class="progress">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    attr.aria-valuenow="{{
+                      faceOcrResult.faceAttributes.emotion.surprise
+                    }}"
+                    attr.aria-valuemin="0"
+                    attr.aria-valuemax="1"
+                    [style.width]="
+                      faceOcrResult.faceAttributes.emotion.surprise /
+                        current_max_data | percent: '1.0-1'
+                    "
+                  ></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

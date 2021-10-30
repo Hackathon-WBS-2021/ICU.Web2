@@ -18,6 +18,9 @@ export class AppComponent {
   endpoint = "https://icufunctions.azurewebsites.net/api/analyse/image";
   ocrResult = "";
   timedSub: any;
+  faceOcrResult: string;
+
+  current_max_data = 1;
 
   constructor(private httpClient: HttpClient) {}
 
@@ -98,6 +101,12 @@ export class AppComponent {
     const cleanedBlob = blob.replace("data:image/jpeg;base64,", "");
     const result = this.httpClient
       .post<any>(this.endpoint, cleanedBlob)
-      .subscribe((x) => (this.ocrResult = x));
+      .subscribe((result) => this.bindResults(result));
+  }
+
+  private bindResults(results: any) {
+    this.ocrResult = results;
+    this.faceOcrResult = this.ocrResult[0];
+    console.log(this.faceOcrResult);
   }
 }
