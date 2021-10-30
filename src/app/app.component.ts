@@ -14,13 +14,17 @@ export class AppComponent {
   isPlaying = false;
   displayControls = true;
   intervalOn = false;
+  timedSub: any;
 
+  // API
   endpoint = "https://icufunctions.azurewebsites.net/api/analyse/image";
   ocrResult = "";
-  timedSub: any;
-  faceOcrResult: string;
 
+  numberOfPeople: 0;
+
+  //Config
   current_max_data = 1;
+  sessionid = "";
 
   constructor(private httpClient: HttpClient) {}
 
@@ -38,6 +42,8 @@ export class AppComponent {
   }
 
   startInterval() {
+    this.sessionid = this.randomString();
+    console.log(this.sessionid);
     this.intervalOn = true;
     console.log("activating automated capturing...");
     this.timedSub = Observable.interval(2000).subscribe((val) => {
@@ -101,13 +107,24 @@ export class AppComponent {
   private uploadImage(blob: string): void {
     const cleanedBlob = blob.replace("data:image/jpeg;base64,", "");
     const result = this.httpClient
-      .post<any>(this.endpoint, cleanedBlob)
+      .post<any>(`${this.endpoint}?SessionId=${this.sessionid}`, cleanedBlob)
       .subscribe((result) => this.bindResults(result));
   }
 
   private bindResults(results: any) {
     this.ocrResult = results;
-    this.faceOcrResult = this.ocrResult[0];
-    console.log(this.faceOcrResult);
+    this.numberOfPeople = results.length;
+
+    console.log(results);
+  }
+
+  private randomString(): string {
+    const chars =
+      "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const length = 8;
+    var result = "";
+    for (var i = length; i > 0; --i)
+      result += chars[Math.floor(Math.random() * chars.length)];
+    return result;
   }
 }

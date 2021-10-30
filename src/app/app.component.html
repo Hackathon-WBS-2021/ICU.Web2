@@ -50,8 +50,13 @@
     <div class="col-md-8">
       <img [src]="image" />
     </div>
-    <div class="col-md-4">
-      <div class="well" *ngIf="faceOcrResult">
+    <div class="col">
+      <h1>{{ numberOfPeople }}</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4" *ngFor="let faceOcrResult of ocrResult">
+      <div class="well">
         <table class="table">
           <thead></thead>
           <tbody>
